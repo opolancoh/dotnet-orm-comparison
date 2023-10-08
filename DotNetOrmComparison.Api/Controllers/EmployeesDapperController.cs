@@ -8,18 +8,26 @@ namespace DotNetOrmComparison.Api.Controllers;
 [Route("api/dapper/employees")]
 public class EmployeesDapperController: ControllerBase
 {
-    private readonly IEmployeeDapperService _employeeService;
+    private readonly IEmployeeDapperService _service;
     
-    public EmployeesDapperController(IEmployeeDapperService employeeService)
+    public EmployeesDapperController(IEmployeeDapperService service)
     {
-        _employeeService = employeeService;
+        _service = service;
     }
     
     [HttpGet]
     public async Task<IActionResult> Get([FromQuery] int? pageIndex, [FromQuery] int? pageSize, bool? addTotalCount)
     {
         var pagination = new PaginationOptions(pageIndex, pageSize, addTotalCount);
-        var result = await _employeeService.GetAll(pagination);
+        var result = await _service.GetAll(pagination);
+
+        return StatusCode(StatusCodes.Status200OK, result);
+    }
+    
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(Guid id)
+    {
+        var result = await _service.GetById(id);
 
         return StatusCode(StatusCodes.Status200OK, result);
     }

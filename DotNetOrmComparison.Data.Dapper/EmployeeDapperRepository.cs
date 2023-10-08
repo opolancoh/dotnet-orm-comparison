@@ -29,7 +29,7 @@ public class EmployeeDapperRepository : IEmployeeDapperRepository
 
         const string sql = """
                            SELECT
-                            e."Id", e."FirstName", e."LastName", e."Gender"::int, e."Email", e."Salary",
+                            e."Id", e."FirstName", e."LastName", e."Gender", e."Email", e."Salary",
                             a."Street", a."City", a."State",
                             d."Id", d."Name",
                             p."Id", p."Name"
@@ -84,5 +84,56 @@ public class EmployeeDapperRepository : IEmployeeDapperRepository
                 TotalCount = totalCount
             }
         };
+    }
+
+    public async Task<EmployeeDetailResult?> GetById(Guid id)
+    {
+        const string sql = """
+                           SELECT
+                            e.*,
+                            a."Street", a."City", a."State", a."ZipCode",
+                            d."Id", d."Name",
+                            p."Id", p."Name"
+                           FROM (
+                            SELECT e0.*
+                            FROM "Employees" AS e0
+                            WHERE e0."Id" = @Id
+                           ) AS e
+                           LEFT JOIN "Addresses" AS a ON e."Id" = a."EmployeeId"
+                           LEFT JOIN "Departments" AS d ON e."DepartmentId" = d."Id"
+                           LEFT JOIN (
+                            SELECT p0."Id", p0."Name", ep."EmployeeId"
+                               FROM "EmployeeProjects" AS ep
+                               INNER JOIN "Projects" AS p0 ON ep."ProjectId" = p0."Id"
+                           ) AS p ON e."Id" = p."EmployeeId"
+                           """;
+
+        EmployeeDetailResult? employeeDetail = null;
+
+        await _dbConnection
+            .QueryAsync<EmployeeDetailResult, AddressDto, KeyValueDto<Guid>, KeyValueDto<Guid>, EmployeeDetailResult>(
+                sql,
+                (employee, address, department, project) =>
+                {
+                    if (employeeDetail == null)
+                    {
+                        employeeDetail = employee;
+                        employeeDetail.Address = address;
+                        employeeDetail.Department = department;
+                        employeeDetail.Projects = new List<KeyValueDto<Guid>>();
+                    }
+
+                    if (project != null)
+                    {
+                        employeeDetail.Projects.Add(project);
+                    }
+
+                    return employeeDetail;
+                },
+                new { Id = id },
+                splitOn: "Street,Id,Id" // Split on Address.Street, DepartmentId, ProjectId
+            );
+
+        return employeeDetail;
     }
 }

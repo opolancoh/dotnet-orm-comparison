@@ -7,16 +7,16 @@ namespace DotNetOrmComparison.Services;
 
 public class EmployeeEntityFrameworkService : IEmployeeEntityFrameworkService
 {
-    private readonly IEmployeeEntityFrameworkRepository _employeeRepository;
+    private readonly IEmployeeEntityFrameworkRepository _repository;
 
-    public EmployeeEntityFrameworkService(IEmployeeEntityFrameworkRepository employeeRepository)
+    public EmployeeEntityFrameworkService(IEmployeeEntityFrameworkRepository repository)
     {
-        _employeeRepository = employeeRepository;
+        _repository = repository;
     }
 
     public async Task<ApplicationResult> GetAll(PaginationOptions pagination)
     {
-        var result = await _employeeRepository.GetAll(pagination);
+        var result = await _repository.GetAll(pagination);
 
         return new ApplicationResult
         {
@@ -26,9 +26,24 @@ public class EmployeeEntityFrameworkService : IEmployeeEntityFrameworkService
         };
     }
 
-    public Task<ApplicationResult> GetById(Guid id)
+    public async Task<ApplicationResult> GetById(Guid id)
     {
-        throw new NotImplementedException();
+        var item = await _repository.GetById(id);
+
+        if (item == null)
+        {
+            return new ApplicationResult
+            {
+                Status = 404,
+                Message = $"The item with id '{id}' was not found or you don't have permission to access it."
+            };
+        }
+
+        return new ApplicationResult
+        {
+            Status = 200,
+            Data = item
+        };
     }
 
     public Task<ApplicationResult> Create(EmployeeCreateOrUpdate item)

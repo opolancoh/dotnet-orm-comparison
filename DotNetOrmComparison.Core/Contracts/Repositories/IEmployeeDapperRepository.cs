@@ -6,7 +6,7 @@ namespace DotNetOrmComparison.Core.Contracts.Repositories;
 public interface IEmployeeDapperRepository // : IRepositoryBase<Employee, Guid>
 {
     Task<PagedListResult<EmployeeListResult>> GetAll(PaginationOptions pagination);
-    // Task<RiskDto?> GetById(Guid id);
+    Task<EmployeeDetailResult?> GetById(Guid id);
     // Task Create(Risk item);
     // Task Update(Risk item);
     // Task Remove(Guid id);

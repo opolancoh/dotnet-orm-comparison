@@ -72,9 +72,42 @@ public class EmployeeEntityFrameworkRepository : IEmployeeEntityFrameworkReposit
         };
     }
 
-    public Task<Employee?> GetById(Guid id)
+    public async Task<EmployeeDetailResult?> GetById(Guid id)
     {
-        throw new NotImplementedException();
+        return await _entitySet
+            .AsNoTracking()
+            .Select(
+                x => new EmployeeDetailResult
+                {
+                    Id = x.Id,
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    Gender = (int)x.Gender,
+                    Email = x.Email,
+                    HireDate = x.HireDate,
+                    Salary = x.Salary,
+                    IsActive = x.IsActive,
+                    HourlyRate = x.HourlyRate,
+                    MaritalStatus = x.MaritalStatus,
+                    Address = new AddressDto
+                    {
+                        Street = x.Address.Street,
+                        City = x.Address.City,
+                        State = x.Address.State,
+                        ZipCode = x.Address.ZipCode
+                    },
+                    Department = new KeyValueDto<Guid>
+                    {
+                        Id = x.Department.Id,
+                        Name = x.Department.Name
+                    },
+                    Projects = x.EmployeeProjects.Select(p => new KeyValueDto<Guid>
+                    {
+                        Id = p.ProjectId,
+                        Name = p.Project.Name
+                    }).ToList()
+                })
+            .SingleOrDefaultAsync(x => x.Id == id);
     }
 
     public Task<int> Create(Employee item)

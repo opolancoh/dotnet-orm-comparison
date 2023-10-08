@@ -7,16 +7,16 @@ namespace DotNetOrmComparison.Services;
 
 public class EmployeeDapperService : IEmployeeDapperService
 {
-    private readonly IEmployeeDapperRepository _employeeRepository;
+    private readonly IEmployeeDapperRepository _repository;
 
-    public EmployeeDapperService(IEmployeeDapperRepository employeeRepository)
+    public EmployeeDapperService(IEmployeeDapperRepository repository)
     {
-        _employeeRepository = employeeRepository;
+        _repository = repository;
     }
 
     public async Task<ApplicationResult> GetAll(PaginationOptions pagination)
     {
-        var result = await _employeeRepository.GetAll(pagination);
+        var result = await _repository.GetAll(pagination);
 
         return new ApplicationResult
         {
@@ -26,9 +26,24 @@ public class EmployeeDapperService : IEmployeeDapperService
         };
     }
 
-    public Task<ApplicationResult> GetById(Guid id)
+    public async Task<ApplicationResult?> GetById(Guid id)
     {
-        throw new NotImplementedException();
+        var item = await _repository.GetById(id);
+
+        if (item == null)
+        {
+            return new ApplicationResult
+            {
+                Status = 404,
+                Message = $"The item with id '{id}' was not found or you don't have permission to access it."
+            };
+        }
+
+        return new ApplicationResult
+        {
+            Status = 200,
+            Data = item
+        };
     }
 
     public Task<ApplicationResult> Create(EmployeeCreateOrUpdate item)
