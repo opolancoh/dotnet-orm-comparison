@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DotNetOrmComparison.Data.EntityFramework.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231007071545_InitialMigration")]
+    [Migration("20231008204724_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -83,6 +83,9 @@ namespace DotNetOrmComparison.Data.EntityFramework.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<Guid>("DepartmentId")
                         .HasColumnType("uuid");
 
@@ -115,6 +118,9 @@ namespace DotNetOrmComparison.Data.EntityFramework.Migrations
 
                     b.Property<decimal>("Salary")
                         .HasColumnType("numeric");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 

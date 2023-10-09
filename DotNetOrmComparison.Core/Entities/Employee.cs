@@ -11,6 +11,8 @@ public class Employee : BaseEntity
     public bool IsActive { get; init; }
     public int HourlyRate { get; init; }
     public MaritalStatus MaritalStatus { get; init; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
 
     // One-to-One relationship with EmployeeDetail
     // Navigation property

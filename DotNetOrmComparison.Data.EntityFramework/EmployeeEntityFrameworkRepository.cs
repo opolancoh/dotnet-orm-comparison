@@ -89,6 +89,8 @@ public class EmployeeEntityFrameworkRepository : IEmployeeEntityFrameworkReposit
                     IsActive = x.IsActive,
                     HourlyRate = x.HourlyRate,
                     MaritalStatus = x.MaritalStatus,
+                    CreatedAt = x.CreatedAt,
+                    UpdatedAt = x.UpdatedAt,
                     Address = new AddressDto
                     {
                         Street = x.Address.Street,
@@ -110,9 +112,11 @@ public class EmployeeEntityFrameworkRepository : IEmployeeEntityFrameworkReposit
             .SingleOrDefaultAsync(x => x.Id == id);
     }
 
-    public Task<int> Create(Employee item)
+    public async Task<bool> Add(Employee item)
     {
-        throw new NotImplementedException();
+        _entitySet.Add(item);
+        var affectedRows = await _context.SaveChangesAsync();
+        return affectedRows > 0;
     }
 
     public Task<int> Update(Employee item)

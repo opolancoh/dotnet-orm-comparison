@@ -1,5 +1,6 @@
 using DotNetOrmComparison.Core.Contracts.Repositories;
 using DotNetOrmComparison.Core.Contracts.Services;
+using DotNetOrmComparison.Core.Entities;
 using DotNetOrmComparison.Core.Shared.InputModels;
 using DotNetOrmComparison.Core.Shared.DTOs;
 
@@ -46,23 +47,57 @@ public class EmployeeEntityFrameworkService : IEmployeeEntityFrameworkService
         };
     }
 
-    public Task<ApplicationResult> Create(EmployeeCreateOrUpdate item)
+    public async Task<ApplicationResult> Add(EmployeeCreateOrUpdate item)
     {
-        throw new NotImplementedException();
-    }
+        var newItem = new Employee
+        {
+            Id = Guid.NewGuid(),
+            FirstName = item.FirstName,
+            LastName = item.LastName,
+            Gender = item.Gender,
+            Email = item.Email,
+            HireDate = item.HireDate,
+            Salary = item.Salary,
+            IsActive = true,
+            HourlyRate = item.HourlyRate,
+            MaritalStatus = item.MaritalStatus,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow,
+            Address = new Address
+            {
+                Id = Guid.NewGuid(),
+                Street = item.Address.Street,
+                City = item.Address.City,
+                State = item.Address.State,
+                ZipCode = item.Address.ZipCode
+            },
+            DepartmentId = item.DepartmentId
+        };
 
-    public Task<ApplicationResult> Update(Guid id, EmployeeCreateOrUpdate item)
-    {
-        throw new NotImplementedException();
-    }
+        if (item.Projects != null)
+        {
+            foreach (var projectId in item.Projects)
+            {
+                newItem.EmployeeProjects.Add(new EmployeeProject { EmployeeId = newItem.Id, ProjectId = projectId });
+            }
+        }
 
-    public Task<ApplicationResult> Remove(Guid id)
-    {
-        throw new NotImplementedException();
-    }
+        var isValid = await _repository.Add(newItem);
 
-    public Task<ApplicationResult> AddRange(IEnumerable<EmployeeCreateOrUpdate> items)
-    {
-        throw new NotImplementedException();
+        if (isValid)
+        {
+            return new ApplicationResult
+            {
+                Status = 201,
+                Message = "Item created successfully.",
+                Data = new { newItem.Id }
+            };
+        }
+        
+        return new ApplicationResult
+        {
+            Status = 400,
+            Message = "The item could not be created."
+        };
     }
 }

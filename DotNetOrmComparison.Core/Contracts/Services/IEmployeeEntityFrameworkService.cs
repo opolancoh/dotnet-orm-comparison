@@ -7,4 +7,5 @@ public interface IEmployeeEntityFrameworkService
 {
     Task<ApplicationResult> GetAll(PaginationOptions pagination);
     Task<ApplicationResult> GetById(Guid id);
+    Task<ApplicationResult> Add(EmployeeCreateOrUpdate item);
 }

@@ -75,6 +75,8 @@ public static class DataSeeder
                     ZipCode = values[12]
                 },
                 DepartmentId = departments[GetRandomNumber(0, departments.Count - 1)].Id,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
             };
             employee.EmployeeProjects = GetRandomProjects(projects, employee.Id);
             employeesChunk.Add(employee);

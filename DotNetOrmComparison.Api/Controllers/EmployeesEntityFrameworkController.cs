@@ -31,4 +31,12 @@ public class EmployeesEntityFrameworkController: ControllerBase
 
         return StatusCode(StatusCodes.Status200OK, result);
     }
+    
+    [HttpPost]
+    public async Task<IActionResult> Create(EmployeeCreateOrUpdate item)
+    {
+        var result = await _service.Add(item);
+
+        return StatusCode(StatusCodes.Status200OK, result);
+    }
 }

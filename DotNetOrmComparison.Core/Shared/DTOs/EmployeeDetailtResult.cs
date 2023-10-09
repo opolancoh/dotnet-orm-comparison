@@ -14,6 +14,8 @@ public record EmployeeDetailResult
     public bool IsActive { get; init; }
     public int HourlyRate { get; init; }
     public MaritalStatus MaritalStatus { get; init; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
     
     public AddressDto Address { get; set; }
     public KeyValueDto<Guid> Department { get; set; }

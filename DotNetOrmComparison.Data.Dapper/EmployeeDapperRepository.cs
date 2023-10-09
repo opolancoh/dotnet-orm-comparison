@@ -1,6 +1,7 @@
 using System.Data;
 using Dapper;
 using DotNetOrmComparison.Core.Contracts.Repositories;
+using DotNetOrmComparison.Core.Entities;
 using DotNetOrmComparison.Core.Shared.DTOs;
 using DotNetOrmComparison.Core.Shared.InputModels;
 
@@ -135,5 +136,91 @@ public class EmployeeDapperRepository : IEmployeeDapperRepository
             );
 
         return employeeDetail;
+    }
+
+    public async Task<bool> Add(Employee item)
+    {
+        const string employeeSql = """
+                                   INSERT INTO "Employees" (
+                                   	"Id"
+                                   	,"FirstName"
+                                   	,"LastName"
+                                   	,"Gender"
+                                   	,"Email"
+                                   	,"HireDate"
+                                   	,"Salary"
+                                   	,"IsActive"
+                                   	,"HourlyRate"
+                                   	,"MaritalStatus"
+                                   	,"CreatedAt"
+                                   	,"UpdatedAt"
+                                   	,"DepartmentId"
+                                   )
+                                   VALUES (
+                                   	@Id
+                                   	,@FirstName
+                                   	,@LastName
+                                   	,@Gender
+                                   	,@Email
+                                   	,@HireDate
+                                   	,@Salary
+                                   	,@IsActive
+                                   	,@HourlyRate
+                                   	,@MaritalStatus
+                                   	,@CreatedAt
+                                   	,@UpdatedAt
+                                   	,@DepartmentId
+                                   )
+                                   """;
+        const string addressSql = """
+                                  INSERT INTO "Addresses" (
+                                  	"Id"
+                                  	,"Street"
+                                  	,"City"
+                                  	,"State"
+                                  	,"ZipCode"
+                                  	,"EmployeeId"
+                                  )
+                                  VALUES (
+                                  	@Id
+                                  	,@Street
+                                  	,@City
+                                  	,@State
+                                  	,@ZipCode
+                                  	,@EmployeeId
+                                  )
+                                  """;
+        const string projectSql = """
+                                  INSERT INTO "EmployeeProjects" ("EmployeeId", "ProjectId")
+                                  VALUES (@EmployeeId, @ProjectId)
+                                  """;
+        _dbConnection.Open();
+        using var transaction = _dbConnection.BeginTransaction();
+        var employeeRowsAffected = 0;
+        var addressRowsAffected = 0;
+        var projectRowsAffected = 0;
+        try
+        {
+            employeeRowsAffected = await _dbConnection.ExecuteAsync(employeeSql, item, transaction);
+            addressRowsAffected = await _dbConnection.ExecuteAsync(addressSql, item.Address, transaction);
+            foreach (var ep in item.EmployeeProjects)
+            {
+                projectRowsAffected += await _dbConnection.ExecuteAsync(projectSql, ep, transaction);
+            }
+
+            transaction.Commit();
+        }
+        catch
+        {
+            transaction.Rollback();
+        }
+        finally
+        {
+            _dbConnection.Close();
+        }
+
+        return employeeRowsAffected == 1 
+               && addressRowsAffected == 1 
+               && projectRowsAffected == item.EmployeeProjects.Count;
     }
 }
