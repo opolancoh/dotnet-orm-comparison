@@ -68,7 +68,6 @@ public static class DataSeeder
                 MaritalStatus = (MaritalStatus)Enum.Parse(typeof(MaritalStatus), values[8]),
                 Address = new Address
                 {
-                    Id = Guid.NewGuid(),
                     Street = values[9],
                     City = values[10],
                     State = values[11],

@@ -24,10 +24,14 @@ public class AppDbContext: DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // One-to-One
-        modelBuilder.Entity<Employee>()
-            .HasOne(e => e.Address)
-            .WithOne(d => d.Employee)
-            .HasForeignKey<Address>(d => d.EmployeeId);
+        modelBuilder.Entity<Address>()
+            .HasKey(a => a.EmployeeId); // Set the primary key
+
+        modelBuilder.Entity<Address>()
+            .HasOne(a => a.Employee) // Address has one Employee
+            .WithOne(e => e.Address) // Employee has one Address
+            .HasForeignKey<Address>(a => a.EmployeeId) // Foreign key on Address
+            .OnDelete(DeleteBehavior.Cascade); // Configure delete behavior
 
         // One-to-Many
         modelBuilder.Entity<Employee>()

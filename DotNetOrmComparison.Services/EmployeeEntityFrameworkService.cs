@@ -65,7 +65,6 @@ public class EmployeeEntityFrameworkService : IEmployeeEntityFrameworkService
             UpdatedAt = DateTime.UtcNow,
             Address = new Address
             {
-                Id = Guid.NewGuid(),
                 Street = item.Address.Street,
                 City = item.Address.City,
                 State = item.Address.State,

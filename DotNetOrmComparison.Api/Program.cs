@@ -28,10 +28,10 @@ app.UseAuthorization();
 app.MapControllers();
 
 // Seed data
-/* using (var scope = ((IApplicationBuilder)app).ApplicationServices.CreateScope())
+using (var scope = ((IApplicationBuilder)app).ApplicationServices.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     DataSeeder.Seed(context);
-} */
+}
 
 app.Run();

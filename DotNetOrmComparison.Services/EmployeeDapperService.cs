@@ -66,12 +66,11 @@ public class EmployeeDapperService : IEmployeeDapperService
             UpdatedAt = DateTime.UtcNow,
             Address = new Address
             {
-                Id = Guid.NewGuid(),
+                EmployeeId = itemId,
                 Street = item.Address.Street,
                 City = item.Address.City,
                 State = item.Address.State,
                 ZipCode = item.Address.ZipCode,
-                EmployeeId = itemId
             },
             DepartmentId = item.DepartmentId
         };

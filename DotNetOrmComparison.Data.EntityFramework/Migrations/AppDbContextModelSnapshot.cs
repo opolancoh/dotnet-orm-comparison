@@ -24,16 +24,12 @@ namespace DotNetOrmComparison.Data.EntityFramework.Migrations
 
             modelBuilder.Entity("DotNetOrmComparison.Core.Entities.Address", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid>("EmployeeId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("City")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<Guid>("EmployeeId")
-                        .HasColumnType("uuid");
 
                     b.Property<string>("State")
                         .IsRequired()
@@ -47,10 +43,7 @@ namespace DotNetOrmComparison.Data.EntityFramework.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId")
-                        .IsUnique();
+                    b.HasKey("EmployeeId");
 
                     b.ToTable("Addresses");
                 });

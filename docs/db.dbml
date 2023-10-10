@@ -1,0 +1,44 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table Employees {
+  Id uuid [pk]
+  FirstName varchar
+  LastName varchar
+  Gender integer
+  Email varchar
+  HireDate date
+  Salary numeric
+  IsActive bool
+  HourlyRate integer
+  MaritalStatus integer
+  CreatedAt timestamp
+  UpdatedAt timestamp
+  DepartmentId uuid [ref: > Departments.Id]
+}
+
+Table Addresses {
+  EmployeeId uuid [pk, ref: - Employees.Id]
+  Street varchar
+  City varchar
+  State varchar
+  ZipCode varchar
+}
+
+Table Departments {
+  Id uuid [pk]
+  Name varchar
+  Manager varchar
+}
+
+Table "Projects" {
+  "Id" uuid [pk]
+  "Name" varchar
+  "Status" integer
+  "Progress" integer
+}
+
+Table "EmployeeProjects" {
+  "EmployeeId" uuid [pk, ref: < Employees.Id]
+  "ProjectId" uuid [pk, ref: < Projects.Id]
+}

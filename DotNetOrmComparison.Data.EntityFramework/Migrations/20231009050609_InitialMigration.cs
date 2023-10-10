@@ -71,16 +71,15 @@ namespace DotNetOrmComparison.Data.EntityFramework.Migrations
                 name: "Addresses",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    EmployeeId = table.Column<Guid>(type: "uuid", nullable: false),
                     Street = table.Column<string>(type: "text", nullable: false),
                     City = table.Column<string>(type: "text", nullable: false),
                     State = table.Column<string>(type: "text", nullable: false),
-                    ZipCode = table.Column<string>(type: "text", nullable: false),
-                    EmployeeId = table.Column<Guid>(type: "uuid", nullable: false)
+                    ZipCode = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Addresses", x => x.Id);
+                    table.PrimaryKey("PK_Addresses", x => x.EmployeeId);
                     table.ForeignKey(
                         name: "FK_Addresses_Employees_EmployeeId",
                         column: x => x.EmployeeId,
@@ -112,12 +111,6 @@ namespace DotNetOrmComparison.Data.EntityFramework.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Addresses_EmployeeId",
-                table: "Addresses",
-                column: "EmployeeId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_EmployeeProjects_ProjectId",

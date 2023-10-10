@@ -174,20 +174,18 @@ public class EmployeeDapperRepository : IEmployeeDapperRepository
                                    """;
         const string addressSql = """
                                   INSERT INTO "Addresses" (
-                                  	"Id"
+                                  	"EmployeeId"
                                   	,"Street"
                                   	,"City"
                                   	,"State"
                                   	,"ZipCode"
-                                  	,"EmployeeId"
                                   )
                                   VALUES (
-                                  	@Id
+                                  	@EmployeeId
                                   	,@Street
                                   	,@City
                                   	,@State
                                   	,@ZipCode
-                                  	,@EmployeeId
                                   )
                                   """;
         const string projectSql = """
