@@ -118,24 +118,4 @@ public class EmployeeEntityFrameworkRepository : IEmployeeEntityFrameworkReposit
         var affectedRows = await _context.SaveChangesAsync();
         return affectedRows > 0;
     }
-
-    public Task<int> Update(Employee item)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<int> Remove(Guid id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<bool> ItemExists(Guid id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task AddRange(IEnumerable<Employee> items)
-    {
-        throw new NotImplementedException();
-    }
 }
