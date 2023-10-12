@@ -1,4 +1,3 @@
-using System.Data;
 using Dapper;
 using DotNetOrmComparison.Core.Contracts.Repositories;
 using DotNetOrmComparison.Core.Entities;
@@ -9,23 +8,26 @@ namespace DotNetOrmComparison.Data.Dapper;
 
 public class EmployeeDapperRepository : IEmployeeDapperRepository
 {
-    private readonly IDbConnection _dbConnection;
+    private readonly DapperDbContext _context;
 
-    public EmployeeDapperRepository(IDbConnection dbConnection)
+    public EmployeeDapperRepository(DapperDbContext context)
     {
-        _dbConnection = dbConnection;
+        _context = context;
     }
 
     public async Task<PagedListResult<EmployeeListResult>> GetAll(PaginationOptions pagination)
     {
         var (pageIndex, pageSize, skip, addTotalCount) = pagination;
+        
+        await using var dbConnection = await _context.CreateAndOpenConnectionAsync();
 
         // Get the total count of records
         int? totalCount = null;
         if (addTotalCount)
         {
             const string countQuery = "SELECT COUNT(*) FROM Employees";
-            totalCount = await _dbConnection.ExecuteScalarAsync<int>(countQuery);
+            
+            totalCount = await dbConnection.ExecuteScalarAsync<int>(countQuery);
         }
 
         const string sql = """
@@ -51,7 +53,7 @@ public class EmployeeDapperRepository : IEmployeeDapperRepository
 
         var lookup = new Dictionary<Guid, EmployeeListResult>();
 
-        await _dbConnection
+        await dbConnection
             .QueryAsync<EmployeeListResult, AddressShortDto, KeyValueDto<Guid>, KeyValueDto<Guid>, EmployeeListResult>(
                 sql,
                 (employee, address, department, project) =>
@@ -110,8 +112,10 @@ public class EmployeeDapperRepository : IEmployeeDapperRepository
                            """;
 
         EmployeeDetailResult? employeeDetail = null;
+        
+        await using var dbConnection = await _context.CreateAndOpenConnectionAsync();
 
-        await _dbConnection
+        await dbConnection
             .QueryAsync<EmployeeDetailResult, AddressDto, KeyValueDto<Guid>, KeyValueDto<Guid>, EmployeeDetailResult>(
                 sql,
                 (employee, address, department, project) =>
@@ -192,29 +196,28 @@ public class EmployeeDapperRepository : IEmployeeDapperRepository
                                   INSERT INTO "EmployeeProjects" ("EmployeeId", "ProjectId")
                                   VALUES (@EmployeeId, @ProjectId)
                                   """;
-        _dbConnection.Open();
-        using var transaction = _dbConnection.BeginTransaction();
+
+        await using var dbConnection = await _context.CreateAndOpenConnectionAsync();
+        await using var transaction = await dbConnection.BeginTransactionAsync();
+        
         var employeeRowsAffected = 0;
         var addressRowsAffected = 0;
         var projectRowsAffected = 0;
+        
         try
         {
-            employeeRowsAffected = await _dbConnection.ExecuteAsync(employeeSql, item, transaction);
-            addressRowsAffected = await _dbConnection.ExecuteAsync(addressSql, item.Address, transaction);
+            employeeRowsAffected = await dbConnection.ExecuteAsync(employeeSql, item, transaction);
+            addressRowsAffected = await dbConnection.ExecuteAsync(addressSql, item.Address, transaction);
             foreach (var ep in item.EmployeeProjects)
             {
-                projectRowsAffected += await _dbConnection.ExecuteAsync(projectSql, ep, transaction);
+                projectRowsAffected += await dbConnection.ExecuteAsync(projectSql, ep, transaction);
             }
 
-            transaction.Commit();
+            await transaction.CommitAsync();
         }
         catch
         {
-            transaction.Rollback();
-        }
-        finally
-        {
-            _dbConnection.Close();
+            await transaction.RollbackAsync();
         }
 
         return employeeRowsAffected == 1 
