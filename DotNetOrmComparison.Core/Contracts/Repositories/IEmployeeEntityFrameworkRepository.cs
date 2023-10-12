@@ -4,9 +4,6 @@ using DotNetOrmComparison.Core.Shared.InputModels;
 
 namespace DotNetOrmComparison.Core.Contracts.Repositories;
 
-public interface IEmployeeEntityFrameworkRepository
+public interface IEmployeeEntityFrameworkRepository : IEmployeeRepository
 {
-    Task<PagedListResult<EmployeeListResult>> GetAll(PaginationOptions pagination);
-    Task<EmployeeDetailResult?> GetById(Guid id);
-    Task<bool> Add(Employee item);
 }

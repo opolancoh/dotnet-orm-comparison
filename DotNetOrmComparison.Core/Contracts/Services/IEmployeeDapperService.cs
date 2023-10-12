@@ -3,9 +3,6 @@ using DotNetOrmComparison.Core.Shared.DTOs;
 
 namespace DotNetOrmComparison.Core.Contracts.Services;
 
-public interface IEmployeeDapperService
+public interface IEmployeeDapperService : IEmployeeService
 {
-    Task<ApplicationResult> GetAll(PaginationOptions pagination);
-    Task<ApplicationResult?> GetById(Guid id);
-    Task<ApplicationResult> Add(EmployeeCreateOrUpdate item);
 }

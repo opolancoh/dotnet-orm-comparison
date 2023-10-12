@@ -3,9 +3,6 @@ using DotNetOrmComparison.Core.Shared.DTOs;
 
 namespace DotNetOrmComparison.Core.Contracts.Services;
 
-public interface IEmployeeEntityFrameworkService
+public interface IEmployeeEntityFrameworkService : IEmployeeService
 {
-    Task<ApplicationResult> GetAll(PaginationOptions pagination);
-    Task<ApplicationResult> GetById(Guid id);
-    Task<ApplicationResult> Add(EmployeeCreateOrUpdate item);
 }
