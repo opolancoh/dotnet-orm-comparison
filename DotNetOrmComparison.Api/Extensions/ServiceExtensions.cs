@@ -24,7 +24,7 @@ public static class ServiceExtensions
         services.AddScoped<IEmployeeEntityFrameworkService, EmployeeEntityFrameworkService>();
 
         // Dapper
-        services.AddScoped<DapperDbContext>(provider =>
+        services.AddScoped<DapperDbContext>(_ =>
             new DapperDbContext(appDbConnection!));
         services.AddScoped<IEmployeeDapperRepository, EmployeeDapperRepository>();
         services.AddScoped<IEmployeeDapperService, EmployeeDapperService>();

@@ -1,6 +1,4 @@
 using DotNetOrmComparison.Api.Extensions;
-using DotNetOrmComparison.Data.EntityFramework;
-using DotNetOrmComparison.Data.EntityFramework.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 

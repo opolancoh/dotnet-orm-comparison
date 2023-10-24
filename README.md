@@ -40,15 +40,15 @@ Goal: Analyze the benchmarking results to understand performance under stress.
 
 **Results (http_req_duration)**:
 
-| ORM       | http_reqs | avg     | min    | med    | max      | p(90)   | p(95)   |
-|-----------|-----------|---------|--------|--------|----------|---------|---------|
-| `EF Core` | 1456      | 20.28ms | 5.34ms | 9.48ms | 239.79ms | 43.61ms | 75.39ms |
-| `Dapper`  | 1964      | 14.96ms | 3.31ms | 7.6ms  | 264.09ms | 34.27ms | 56.17ms |
+| ORM       | http_reqs | avg      | min    | med      | max      | p(90)    | p(95)   |
+|-----------|-----------|----------|--------|----------|----------|----------|---------|
+| `EF Core` | 1147      | 25.7ms   | 5.48ms | 10.95ms  | 375.39ms | 63.3ms   | 88.55ms |
+| `Dapper`  | 1676      | 17.56ms  | 3.62ms | 8.25ms   | 227.05ms | 37.23ms  | 59.65ms |
 
 * 30 seconds
 * 1 user
-* Insertions: Dapper inserted 508 more rows than EF Core
-* Average: Dapper is 1.4x faster than EF Core
+* Insertions: Dapper inserted 529 more rows than EF Core
+* Average: Dapper is 1.5x faster than EF Core
 
 **EF Core**
 ```sh
@@ -71,15 +71,15 @@ k6 run -e ORM=dapper --duration 30s --vus 1 employees-create-test.js
 
 **Results (http_req_duration)**:
 
-| ORM       | http_reqs | avg     | min    | med     | max      | p(90)   | p(95)   |
-|-----------|-----------|---------|--------|---------|----------|---------|---------|
-| `EF Core` | 1262      | 23.1ms  | 4.03ms | 8.78ms  | 250.15ms | 59.76ms | 96.62ms |
-| `Dapper`  | 1596      | 18.16ms | 1.72ms | 4.19ms  | 210.18ms | 56.28ms | 81.25ms |
+| ORM       | http_reqs | avg      | min    | med     | max      | p(90)    | p(95)    |
+|-----------|-----------|----------|--------|---------|----------|----------|----------|
+| `EF Core` | 861       | 33.82ms  | 4.8ms  | 11.17ms | 551.96ms | 103.84ms | 130.68ms |
+| `Dapper`  | 1277      | 22.8ms   | 2.02ms | 5.83ms  | 210.53ms | 66.85ms  | 104.72ms |
 
 * 30 seconds
 * 1 user
-* Reads: Dapper fetched 334 more rows than EF Core
-* Average: Dapper is 1.3x faster than EF Core
+* Reads: Dapper fetched 416 more rows than EF Core
+* Average: Dapper is 1.5x faster than EF Core
 
 **EF Core**
 ```sh
@@ -102,10 +102,10 @@ k6 run -e ORM=dapper --duration 30s --vus 1 employees-getall-test.js
 
 **Results (http_req_duration)**:
 
-| ORM       | http_reqs | avg     | min     | med     | max       | p(90)   | p(95)    |
-|-----------|-----------|---------|---------|---------|-----------|---------|----------|
-| `EF Core` | 1148      | 25.74ms | 4.07ms  | 9.61ms  | 292.58ms  | 76.94ms | 98.12ms  |
-| `Dapper`  | 608       | 48.98ms | 1.85ms  | 34.77ms | 205.8ms   | 109.1ms | 130.27ms |
+| ORM       | http_reqs | avg     | min    | med     | max      | p(90)    | p(95)    |
+|-----------|-----------|---------|--------|---------|----------|----------|----------|
+| `EF Core` | 967       | 30.54ms | 4.36ms | 10.19ms | 267.57ms | 87.73ms  | 123.55ms |
+| `Dapper`  | 720       | 41.13ms | 1.7ms  | 21.53ms | 217.94ms | 107.68ms | 136.07ms |
 
 * 30 seconds
 * 1 user

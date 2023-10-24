@@ -27,7 +27,7 @@ public class EmployeeEntityFrameworkService : IEmployeeEntityFrameworkService
         };
     }
 
-    public async Task<ApplicationResult> GetById(Guid id)
+    public async Task<ApplicationResult?> GetById(Guid id)
     {
         var item = await _repository.GetById(id);
 
