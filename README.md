@@ -109,8 +109,8 @@ k6 run -e ORM=dapper --duration 30s --vus 1 employees-getall-test.js
 
 * 30 seconds
 * 1 user
-* Reads: EF Core fetched 540 more rows than Dapper
-* Average: EF Core is 1.9x faster than Dapper
+* Reads: EF Core fetched 247 more rows than Dapper
+* Average: EF Core is 1.3x faster than Dapper
 
 **EF Core**
 ```sh
